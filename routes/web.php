@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\SymbolController;
 use App\Http\Controllers\TimePeriodController;
+use App\Http\Controllers\ExchangeController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -18,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::resource('symbols', SymbolController::class);
     Route::resource('time-periods', TimePeriodController::class);
+    Route::resource('exchanges', ExchangeController::class);
 });
 
 require __DIR__.'/settings.php';

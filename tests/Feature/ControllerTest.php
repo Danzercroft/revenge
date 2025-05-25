@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Symbol;
 use App\Models\TimePeriod;
+use App\Models\Exchange;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -170,5 +171,177 @@ class ControllerTest extends TestCase
 
         $response->assertRedirect('/time-periods');
         $this->assertDatabaseMissing('time_periods', ['id' => $timePeriod->id]);
+    }
+
+    // ===============================
+    // EXCHANGE TESTS
+    // ===============================
+
+    #[Test]
+    public function exchanges_index_works()
+    {
+        Exchange::factory()->create(['name' => 'Binance', 'code' => 'BINANCE', 'environment' => 'production']);
+        Exchange::factory()->create(['name' => 'Bybit', 'code' => 'BYBIT', 'environment' => 'sandbox']);
+
+        $response = $this->actingAs($this->user)->get('/exchanges');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn($page) => $page
+            ->component('exchanges/index')
+            ->has('exchanges.data', 2)
+        );
+    }
+
+    #[Test]
+    public function exchanges_create_works()
+    {
+        $response = $this->actingAs($this->user)->get('/exchanges/create');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn($page) => $page
+            ->component('exchanges/create')
+        );
+    }
+
+    #[Test]
+    public function exchanges_store_works()
+    {
+        $exchangeData = [
+            'name' => 'Test Exchange',
+            'code' => 'TEST',
+            'environment' => 'sandbox',
+            'api_key' => 'test_api_key',
+            'api_secret' => 'test_api_secret',
+            'api_passphrase' => 'test_passphrase',
+            'is_active' => true
+        ];
+
+        $response = $this->actingAs($this->user)->post('/exchanges', $exchangeData);
+
+        $response->assertRedirect('/exchanges');
+        $this->assertDatabaseHas('exchanges', [
+            'name' => 'Test Exchange',
+            'code' => 'TEST',
+            'environment' => 'sandbox',
+            'api_key' => 'test_api_key',
+            'api_secret' => 'test_api_secret',
+            'api_passphrase' => 'test_passphrase',
+            'is_active' => true
+        ]);
+    }
+
+    #[Test]
+    public function exchanges_store_validation_fails()
+    {
+        $response = $this->actingAs($this->user)->post('/exchanges', []);
+
+        $response->assertSessionHasErrors(['name', 'code', 'environment']);
+    }
+
+    #[Test]
+    public function exchanges_code_must_be_unique()
+    {
+        Exchange::factory()->create(['code' => 'BINANCE', 'environment' => 'production']);
+
+        $duplicateData = [
+            'name' => 'Another Binance',
+            'code' => 'BINANCE',
+            'environment' => 'sandbox',
+            'is_active' => true
+        ];
+
+        $response = $this->actingAs($this->user)->post('/exchanges', $duplicateData);
+
+        $response->assertSessionHasErrors(['code']);
+    }
+
+    #[Test]
+    public function exchanges_show_works()
+    {
+        $exchange = Exchange::factory()->create(['name' => 'Binance', 'code' => 'BINANCE', 'environment' => 'production']);
+
+        $response = $this->actingAs($this->user)->get("/exchanges/{$exchange->id}");
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn($page) => $page
+            ->component('exchanges/show')
+            ->has('exchange')
+        );
+    }
+
+    #[Test]
+    public function exchanges_edit_works()
+    {
+        $exchange = Exchange::factory()->create(['name' => 'Binance', 'code' => 'BINANCE', 'environment' => 'production']);
+
+        $response = $this->actingAs($this->user)->get("/exchanges/{$exchange->id}/edit");
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn($page) => $page
+            ->component('exchanges/edit')
+            ->has('exchange')
+        );
+    }
+
+    #[Test]
+    public function exchanges_update_works()
+    {
+        $exchange = Exchange::factory()->create(['name' => 'Old Name', 'code' => 'OLD', 'environment' => 'sandbox']);
+
+        $updateData = [
+            'name' => 'New Exchange Name',
+            'code' => 'NEW',
+            'environment' => 'production',
+            'is_active' => false
+        ];
+
+        $response = $this->actingAs($this->user)->put("/exchanges/{$exchange->id}", $updateData);
+
+        $response->assertRedirect('/exchanges');
+        $this->assertDatabaseHas('exchanges', $updateData);
+    }
+
+    #[Test]
+    public function exchanges_update_preserves_api_keys_when_empty()
+    {
+        $exchange = Exchange::factory()->create([
+            'name' => 'Test Exchange',
+            'code' => 'TEST',
+            'environment' => 'sandbox',
+            'api_key' => 'original_key',
+            'api_secret' => 'original_secret',
+            'api_passphrase' => 'original_passphrase'
+        ]);
+
+        $updateData = [
+            'name' => 'Updated Exchange',
+            'code' => $exchange->code,
+            'environment' => $exchange->environment,
+            'api_key' => '',
+            'api_secret' => '',
+            'api_passphrase' => '',
+            'is_active' => true
+        ];
+
+        $response = $this->actingAs($this->user)->put("/exchanges/{$exchange->id}", $updateData);
+
+        $response->assertRedirect('/exchanges');
+        
+        $exchange->refresh();
+        $this->assertEquals('original_key', $exchange->api_key);
+        $this->assertEquals('original_secret', $exchange->api_secret);
+        $this->assertEquals('original_passphrase', $exchange->api_passphrase);
+        $this->assertEquals('Updated Exchange', $exchange->name);
+    }
+
+    #[Test]
+    public function exchanges_delete_works()
+    {
+        $exchange = Exchange::factory()->create(['name' => 'Test Exchange', 'code' => 'TEST', 'environment' => 'sandbox']);
+
+        $response = $this->actingAs($this->user)->delete("/exchanges/{$exchange->id}");
+
+        $response->assertRedirect('/exchanges');
+        $this->assertDatabaseMissing('exchanges', ['id' => $exchange->id]);
     }
 }
