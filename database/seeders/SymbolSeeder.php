@@ -23,6 +23,18 @@ class SymbolSeeder extends Seeder
                 'is_active' => true,
             ],
             [
+                'name' => 'Tether',
+                'symbol' => 'USDT',
+                'description' => 'Стейблкоин привязанный к доллару США',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'USD Coin',
+                'symbol' => 'USDC',
+                'description' => 'Стейблкоин привязанный к доллару США',
+                'is_active' => true,
+            ],
+            [
                 'name' => 'Binance Coin',
                 'symbol' => 'BNB',
                 'description' => 'Токен биржи Binance',

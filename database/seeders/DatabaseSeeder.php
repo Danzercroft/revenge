@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             SymbolSeeder::class,
             TimePeriodSeeder::class,
+            CurrencyPairSeeder::class,
         ]);
     }
 }

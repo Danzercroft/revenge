@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\SymbolController;
 use App\Http\Controllers\TimePeriodController;
 use App\Http\Controllers\ExchangeController;
+use App\Http\Controllers\CurrencyPairController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -20,6 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('symbols', SymbolController::class);
     Route::resource('time-periods', TimePeriodController::class);
     Route::resource('exchanges', ExchangeController::class);
+    Route::resource('currency-pairs', CurrencyPairController::class);
 });
 
 require __DIR__.'/settings.php';
