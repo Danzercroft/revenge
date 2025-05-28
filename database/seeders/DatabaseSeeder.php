@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             SymbolSeeder::class,
             TimePeriodSeeder::class,
+            ExchangeSeeder::class,
             CurrencyPairSeeder::class,
+            ExchangeConfigurationSeeder::class,
         ]);
     }
 }

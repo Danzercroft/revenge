@@ -19,4 +19,12 @@ class TimePeriod extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Scope для фильтрации активных временных периодов
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }

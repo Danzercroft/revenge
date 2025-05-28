@@ -18,6 +18,10 @@ class CurrencyPair extends Model
         'is_active' => 'boolean',
     ];
 
+    protected $appends = [
+        'display_name',
+    ];
+
     public function baseSymbol(): BelongsTo
     {
         return $this->belongsTo(Symbol::class, 'base_symbol_id');
@@ -38,5 +42,13 @@ class CurrencyPair extends Model
         }
         
         return "{$baseName}/{$quoteName}";
+    }
+
+    /**
+     * Scope для фильтрации активных валютных пар
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }
