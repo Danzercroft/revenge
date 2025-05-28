@@ -15,7 +15,7 @@ class ControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    private $user;
+    private User $user;
 
     protected function setUp(): void
     {
@@ -24,7 +24,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function symbols_index_works()
+    public function symbols_index_works(): void
     {
         Symbol::factory()->create(['name' => 'Bitcoin', 'symbol' => 'BTC']);
         Symbol::factory()->create(['name' => 'Ethereum', 'symbol' => 'ETH']);
@@ -40,7 +40,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function symbols_create_works()
+    public function symbols_create_works(): void
     {
         $response = $this->actingAs($this->user)->get('/symbols/create');
 
@@ -52,7 +52,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function symbols_store_works()
+    public function symbols_store_works(): void
     {
         $data = [
             'name' => 'Bitcoin',
@@ -68,7 +68,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function symbols_store_validation_fails()
+    public function symbols_store_validation_fails(): void
     {
         $response = $this->actingAs($this->user)->post('/symbols', []);
 
@@ -76,7 +76,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function symbols_update_works()
+    public function symbols_update_works(): void
     {
         $symbol = Symbol::factory()->create(['name' => 'Bitcoin', 'symbol' => 'BTC']);
 
@@ -94,7 +94,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function symbols_delete_works()
+    public function symbols_delete_works(): void
     {
         $symbol = Symbol::factory()->create(['name' => 'Bitcoin', 'symbol' => 'BTC']);
 
@@ -105,7 +105,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function time_periods_index_works()
+    public function time_periods_index_works(): void
     {
         TimePeriod::factory()->create(['name' => '1 минута', 'minutes' => 1]);
         TimePeriod::factory()->create(['name' => '5 минут', 'minutes' => 5]);
@@ -121,7 +121,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function time_periods_store_works()
+    public function time_periods_store_works(): void
     {
         $data = [
             'name' => '15 минут',
@@ -137,7 +137,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function time_periods_store_validation_fails()
+    public function time_periods_store_validation_fails(): void
     {
         $response = $this->actingAs($this->user)->post('/time-periods', []);
 
@@ -145,7 +145,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function time_periods_update_works()
+    public function time_periods_update_works(): void
     {
         $timePeriod = TimePeriod::factory()->create(['name' => '1 минута', 'minutes' => 1]);
 
@@ -163,7 +163,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function time_periods_delete_works()
+    public function time_periods_delete_works(): void
     {
         $timePeriod = TimePeriod::factory()->create(['name' => '1 минута', 'minutes' => 1]);
 
@@ -178,7 +178,7 @@ class ControllerTest extends TestCase
     // ===============================
 
     #[Test]
-    public function exchanges_index_works()
+    public function exchanges_index_works(): void
     {
         Exchange::factory()->create(['name' => 'Binance', 'code' => 'BINANCE', 'environment' => 'production']);
         Exchange::factory()->create(['name' => 'Bybit', 'code' => 'BYBIT', 'environment' => 'sandbox']);
@@ -193,7 +193,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function exchanges_create_works()
+    public function exchanges_create_works(): void
     {
         $response = $this->actingAs($this->user)->get('/exchanges/create');
 
@@ -204,7 +204,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function exchanges_store_works()
+    public function exchanges_store_works(): void
     {
         $exchangeData = [
             'name' => 'Test Exchange',
@@ -231,7 +231,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function exchanges_store_validation_fails()
+    public function exchanges_store_validation_fails(): void
     {
         $response = $this->actingAs($this->user)->post('/exchanges', []);
 
@@ -239,7 +239,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function exchanges_code_must_be_unique()
+    public function exchanges_code_must_be_unique(): void
     {
         Exchange::factory()->create(['code' => 'BINANCE', 'environment' => 'production']);
 
@@ -256,7 +256,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function exchanges_show_works()
+    public function exchanges_show_works(): void
     {
         $exchange = Exchange::factory()->create(['name' => 'Binance', 'code' => 'BINANCE', 'environment' => 'production']);
 
@@ -270,7 +270,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function exchanges_edit_works()
+    public function exchanges_edit_works(): void
     {
         $exchange = Exchange::factory()->create(['name' => 'Binance', 'code' => 'BINANCE', 'environment' => 'production']);
 
@@ -284,7 +284,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function exchanges_update_works()
+    public function exchanges_update_works(): void
     {
         $exchange = Exchange::factory()->create(['name' => 'Old Name', 'code' => 'OLD', 'environment' => 'sandbox']);
 
@@ -302,7 +302,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function exchanges_update_preserves_api_keys_when_empty()
+    public function exchanges_update_preserves_api_keys_when_empty(): void
     {
         $exchange = Exchange::factory()->create([
             'name' => 'Test Exchange',
@@ -335,7 +335,7 @@ class ControllerTest extends TestCase
     }
 
     #[Test]
-    public function exchanges_delete_works()
+    public function exchanges_delete_works(): void
     {
         $exchange = Exchange::factory()->create(['name' => 'Test Exchange', 'code' => 'TEST', 'environment' => 'sandbox']);
 

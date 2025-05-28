@@ -8,7 +8,7 @@ use Inertia\Inertia;
 
 class TimePeriodController extends Controller
 {
-    public function index()
+    public function index(): \Inertia\Response
     {
         $timePeriods = TimePeriod::orderBy('name')->paginate(20);
         
@@ -17,12 +17,12 @@ class TimePeriodController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): \Inertia\Response
     {
         return Inertia::render('time-periods/create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -37,21 +37,21 @@ class TimePeriodController extends Controller
             ->with('success', 'Временной период успешно создан.');
     }
 
-    public function show(TimePeriod $timePeriod)
+    public function show(TimePeriod $timePeriod): \Inertia\Response
     {
         return Inertia::render('time-periods/show', [
             'timePeriod' => $timePeriod
         ]);
     }
 
-    public function edit(TimePeriod $timePeriod)
+    public function edit(TimePeriod $timePeriod): \Inertia\Response
     {
         return Inertia::render('time-periods/edit', [
             'timePeriod' => $timePeriod
         ]);
     }
 
-    public function update(Request $request, TimePeriod $timePeriod)
+    public function update(Request $request, TimePeriod $timePeriod): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -66,7 +66,7 @@ class TimePeriodController extends Controller
             ->with('success', 'Временной период успешно обновлен.');
     }
 
-    public function destroy(TimePeriod $timePeriod)
+    public function destroy(TimePeriod $timePeriod): \Illuminate\Http\RedirectResponse
     {
         $timePeriod->delete();
 

@@ -8,7 +8,7 @@ use Inertia\Inertia;
 
 class SymbolController extends Controller
 {
-    public function index()
+    public function index(): \Inertia\Response
     {
         $symbols = Symbol::orderBy('name')->paginate(20);
         
@@ -17,12 +17,12 @@ class SymbolController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): \Inertia\Response
     {
         return Inertia::render('symbols/create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -37,21 +37,21 @@ class SymbolController extends Controller
             ->with('success', 'Символ успешно создан.');
     }
 
-    public function show(Symbol $symbol)
+    public function show(Symbol $symbol): \Inertia\Response
     {
         return Inertia::render('symbols/show', [
             'symbol' => $symbol
         ]);
     }
 
-    public function edit(Symbol $symbol)
+    public function edit(Symbol $symbol): \Inertia\Response
     {
         return Inertia::render('symbols/edit', [
             'symbol' => $symbol
         ]);
     }
 
-    public function update(Request $request, Symbol $symbol)
+    public function update(Request $request, Symbol $symbol): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -66,7 +66,7 @@ class SymbolController extends Controller
             ->with('success', 'Символ успешно обновлен.');
     }
 
-    public function destroy(Symbol $symbol)
+    public function destroy(Symbol $symbol): \Illuminate\Http\RedirectResponse
     {
         $symbol->delete();
 

@@ -12,7 +12,7 @@ class CurrencyPairController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Inertia\Response
     {
         $currencyPairs = CurrencyPair::with(['baseSymbol', 'quoteSymbol'])
             ->orderBy('created_at', 'desc')
@@ -38,7 +38,7 @@ class CurrencyPairController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): \Inertia\Response
     {
         $symbols = Symbol::where('is_active', true)
             ->orderBy('symbol')
@@ -52,7 +52,7 @@ class CurrencyPairController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'base_symbol_id' => 'required|exists:symbols,id',
@@ -70,7 +70,7 @@ class CurrencyPairController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(CurrencyPair $currencyPair)
+    public function show(CurrencyPair $currencyPair): \Inertia\Response
     {
         $currencyPair->load(['baseSymbol', 'quoteSymbol']);
 
@@ -91,7 +91,7 @@ class CurrencyPairController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CurrencyPair $currencyPair)
+    public function edit(CurrencyPair $currencyPair): \Inertia\Response
     {
         $symbols = Symbol::where('is_active', true)
             ->orderBy('symbol')
@@ -116,7 +116,7 @@ class CurrencyPairController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CurrencyPair $currencyPair)
+    public function update(Request $request, CurrencyPair $currencyPair): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'base_symbol_id' => 'required|exists:symbols,id',
@@ -134,7 +134,7 @@ class CurrencyPairController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CurrencyPair $currencyPair)
+    public function destroy(CurrencyPair $currencyPair): \Illuminate\Http\RedirectResponse
     {
         $currencyPair->delete();
 

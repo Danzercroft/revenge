@@ -23,7 +23,11 @@ class TimePeriod extends Model
     /**
      * Scope для фильтрации активных временных периодов
      */
-    public function scopeActive($query)
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\TimePeriod> $query
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\TimePeriod>
+     */
+    public function scopeActive(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('is_active', true);
     }

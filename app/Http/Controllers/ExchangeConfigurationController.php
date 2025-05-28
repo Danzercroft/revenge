@@ -15,7 +15,7 @@ class ExchangeConfigurationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
         $query = ExchangeConfiguration::with(['exchange', 'currencyPair.baseSymbol', 'currencyPair.quoteSymbol', 'timePeriod']);
 
@@ -51,7 +51,7 @@ class ExchangeConfigurationController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): \Inertia\Response
     {
         $exchanges = Exchange::active()->get(['id', 'name']);
         $currencyPairs = CurrencyPair::with(['baseSymbol', 'quoteSymbol'])->active()->get();
@@ -67,7 +67,7 @@ class ExchangeConfigurationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validate([
             'exchange_id' => ['required', 'exists:exchanges,id'],
@@ -96,7 +96,7 @@ class ExchangeConfigurationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ExchangeConfiguration $exchangeConfiguration)
+    public function show(ExchangeConfiguration $exchangeConfiguration): \Inertia\Response
     {
         $exchangeConfiguration->load(['exchange', 'currencyPair.baseSymbol', 'currencyPair.quoteSymbol', 'timePeriod']);
 
@@ -108,7 +108,7 @@ class ExchangeConfigurationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ExchangeConfiguration $exchangeConfiguration)
+    public function edit(ExchangeConfiguration $exchangeConfiguration): \Inertia\Response
     {
         $exchangeConfiguration->load(['exchange', 'currencyPair', 'timePeriod']);
         
@@ -127,7 +127,7 @@ class ExchangeConfigurationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ExchangeConfiguration $exchangeConfiguration)
+    public function update(Request $request, ExchangeConfiguration $exchangeConfiguration): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validate([
             'exchange_id' => ['required', 'exists:exchanges,id'],
@@ -157,7 +157,7 @@ class ExchangeConfigurationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ExchangeConfiguration $exchangeConfiguration)
+    public function destroy(ExchangeConfiguration $exchangeConfiguration): \Illuminate\Http\RedirectResponse
     {
         $exchangeConfiguration->delete();
 

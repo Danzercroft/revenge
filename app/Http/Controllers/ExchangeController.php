@@ -11,7 +11,7 @@ class ExchangeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Inertia\Response
     {
         $exchanges = Exchange::paginate(10);
         
@@ -23,7 +23,7 @@ class ExchangeController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): \Inertia\Response
     {
         return Inertia::render('exchanges/create');
     }
@@ -31,7 +31,7 @@ class ExchangeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -52,7 +52,7 @@ class ExchangeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Exchange $exchange)
+    public function show(Exchange $exchange): \Inertia\Response
     {
         return Inertia::render('exchanges/show', [
             'exchange' => $exchange
@@ -62,7 +62,7 @@ class ExchangeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Exchange $exchange)
+    public function edit(Exchange $exchange): \Inertia\Response
     {
         return Inertia::render('exchanges/edit', [
             'exchange' => $exchange
@@ -72,7 +72,7 @@ class ExchangeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Exchange $exchange)
+    public function update(Request $request, Exchange $exchange): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -101,7 +101,7 @@ class ExchangeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Exchange $exchange)
+    public function destroy(Exchange $exchange): \Illuminate\Http\RedirectResponse
     {
         $exchange->delete();
 

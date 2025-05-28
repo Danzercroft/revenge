@@ -1,0 +1,18 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - database
+        - tests
+
+    level: 6
+
+    excludePaths:
+        - database/migrations/*.php
+        - vendor/*
+
+    ignoreErrors:
+        # Игнорируем ошибки типизации HasFactory для Laravel моделей
+        - '#Class .* uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types: TFactory#'

@@ -33,6 +33,9 @@ class Exchange extends Model
     /**
      * Accessor для маскировки API ключа в интерфейсе
      */
+    /**
+     * @return Attribute<string|null, never>
+     */
     protected function apiKeyMasked(): Attribute
     {
         return Attribute::make(
@@ -42,6 +45,9 @@ class Exchange extends Model
 
     /**
      * Accessor для маскировки API секрета в интерфейсе
+     */
+    /**
+     * @return Attribute<string|null, never>
      */
     protected function apiSecretMasked(): Attribute
     {
@@ -53,6 +59,9 @@ class Exchange extends Model
     /**
      * Accessor для маскировки API passphrase в интерфейсе
      */
+    /**
+     * @return Attribute<string|null, never>
+     */
     protected function apiPassphraseMasked(): Attribute
     {
         return Attribute::make(
@@ -63,23 +72,33 @@ class Exchange extends Model
     /**
      * Scope для активных бирж
      */
-    public function scopeActive($query)
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Exchange> $query
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Exchange>
+     */
+    public function scopeActive(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('is_active', true);
     }
 
     /**
      * Scope для продакшн бирж
+     *
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Exchange> $query
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Exchange>
      */
-    public function scopeProduction($query)
+    public function scopeProduction(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('environment', 'production');
     }
 
     /**
      * Scope для sandbox бирж
+     *
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Exchange> $query
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Exchange>
      */
-    public function scopeSandbox($query)
+    public function scopeSandbox(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('environment', 'sandbox');
     }

@@ -20,19 +20,34 @@ class ExchangeConfiguration extends Model
         'additional_config' => 'array',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Exchange, \App\Models\ExchangeConfiguration>
+     */
     public function exchange(): BelongsTo
     {
-        return $this->belongsTo(Exchange::class);
+        /** @var BelongsTo<\App\Models\Exchange, \App\Models\ExchangeConfiguration> $relation */
+        $relation = $this->belongsTo(Exchange::class);
+        return $relation;
     }
 
+    /**
+     * @return BelongsTo<\App\Models\CurrencyPair, \App\Models\ExchangeConfiguration>
+     */
     public function currencyPair(): BelongsTo
     {
-        return $this->belongsTo(CurrencyPair::class);
+        /** @var BelongsTo<\App\Models\CurrencyPair, \App\Models\ExchangeConfiguration> $relation */
+        $relation = $this->belongsTo(CurrencyPair::class, 'currency_pair_id', 'id');
+        return $relation;
     }
 
+    /**
+     * @return BelongsTo<\App\Models\TimePeriod, \App\Models\ExchangeConfiguration>
+     */
     public function timePeriod(): BelongsTo
     {
-        return $this->belongsTo(TimePeriod::class);
+        /** @var BelongsTo<\App\Models\TimePeriod, \App\Models\ExchangeConfiguration> $relation */
+        $relation = $this->belongsTo(TimePeriod::class);
+        return $relation;
     }
 
     /**
@@ -51,7 +66,11 @@ class ExchangeConfiguration extends Model
     /**
      * Scope для фильтрации по бирже
      */
-    public function scopeByExchange($query, $exchangeId)
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\ExchangeConfiguration> $query
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ExchangeConfiguration>
+     */
+    public function scopeByExchange(\Illuminate\Database\Eloquent\Builder $query, int $exchangeId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('exchange_id', $exchangeId);
     }
@@ -59,15 +78,22 @@ class ExchangeConfiguration extends Model
     /**
      * Scope для фильтрации по временному интервалу
      */
-    public function scopeByTimePeriod($query, $timePeriodId)
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\ExchangeConfiguration> $query
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ExchangeConfiguration>
+     */
+    public function scopeByTimePeriod(\Illuminate\Database\Eloquent\Builder $query, int $timePeriodId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('time_period_id', $timePeriodId);
     }
 
     /**
      * Scope для фильтрации активных конфигураций
+     *
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\ExchangeConfiguration> $query
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ExchangeConfiguration>
      */
-    public function scopeActive($query)
+    public function scopeActive(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('is_active', true);
     }
