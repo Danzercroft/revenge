@@ -3,6 +3,9 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Database\Factories\CurrencyPairFactory;
+use Database\Factories\ExchangeFactory;
+use Database\Factories\TimePeriodFactory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Candle>
@@ -52,7 +55,7 @@ class CandleFactory extends Factory
     /**
      * Создать свечу для конкретной пары, биржи и тайм-фрейма
      */
-    public function forPair($currencyPairId, $exchangeId, $timePeriodId): static
+    public function forPair(int $currencyPairId, int $exchangeId, int $timePeriodId): static
     {
         return $this->state(fn (array $attributes) => [
             'currency_pair_id' => $currencyPairId,
@@ -64,7 +67,7 @@ class CandleFactory extends Factory
     /**
      * Создать последовательность свечей
      */
-    public function sequence($startTime, $interval, $count): static
+    public function candleSequence(\DateTime $startTime, string $interval, int $count): static
     {
         $candles = [];
         $currentTime = clone $startTime;
@@ -77,6 +80,6 @@ class CandleFactory extends Factory
             $currentTime->modify($interval);
         }
         
-        return $this->sequence(...$candles);
+        return $this->state(new \Illuminate\Database\Eloquent\Factories\Sequence(...$candles));
     }
 }

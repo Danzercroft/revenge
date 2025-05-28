@@ -15,36 +15,36 @@ class CandleResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'open_time' => $this->open_time->timestamp * 1000, // В миллисекундах для JS
-            'close_time' => $this->close_time->timestamp * 1000,
-            'open_time_readable' => $this->open_time->toISOString(),
-            'close_time_readable' => $this->close_time->toISOString(),
+            'id' => $this->resource->id,
+            'open_time' => $this->resource->open_time->timestamp * 1000, // В миллисекундах для JS
+            'close_time' => $this->resource->close_time->timestamp * 1000,
+            'open_time_readable' => $this->resource->open_time->toISOString(),
+            'close_time_readable' => $this->resource->close_time->toISOString(),
             'ohlcv' => [
-                'open' => (float) $this->open_price,
-                'high' => (float) $this->high_price,
-                'low' => (float) $this->low_price,
-                'close' => (float) $this->close_price,
-                'volume' => (float) $this->volume,
+                'open' => (float) $this->resource->open_price,
+                'high' => (float) $this->resource->high_price,
+                'low' => (float) $this->resource->low_price,
+                'close' => (float) $this->resource->close_price,
+                'volume' => (float) $this->resource->volume,
             ],
-            'quote_volume' => $this->when($this->quote_volume !== null, (float) $this->quote_volume),
-            'trades_count' => $this->trades_count,
+            'quote_volume' => $this->when($this->resource->quote_volume !== null, (float) $this->resource->quote_volume),
+            'trades_count' => $this->resource->trades_count,
             'currency_pair' => [
-                'id' => $this->currencyPair->id,
-                'symbol' => $this->currencyPair->symbol,
-                'base_currency' => $this->currencyPair->base_currency,
-                'quote_currency' => $this->currencyPair->quote_currency,
+                'id' => $this->resource->currencyPair->id,
+                'symbol' => $this->resource->currencyPair->symbol,
+                'base_currency' => $this->resource->currencyPair->base_currency,
+                'quote_currency' => $this->resource->currencyPair->quote_currency,
             ],
             'exchange' => [
-                'id' => $this->exchange->id,
-                'name' => $this->exchange->name,
-                'display_name' => $this->exchange->display_name,
+                'id' => $this->resource->exchange->id,
+                'name' => $this->resource->exchange->name,
+                'display_name' => $this->resource->exchange->display_name,
             ],
             'timeframe' => [
-                'id' => $this->timePeriod->id,
-                'interval' => $this->timePeriod->interval,
-                'name' => $this->timePeriod->name,
-                'minutes' => $this->timePeriod->minutes,
+                'id' => $this->resource->timePeriod->id,
+                'interval' => $this->resource->timePeriod->interval,
+                'name' => $this->resource->timePeriod->name,
+                'minutes' => $this->resource->timePeriod->minutes,
             ],
         ];
     }

@@ -39,39 +39,72 @@ class Candle extends Model
     /**
      * Связь с торговой парой
      */
+    /**
+     * Связь с торговой парой
+     *
+     * @return BelongsTo<\App\Models\CurrencyPair, \App\Models\Candle>
+     */
     public function currencyPair(): BelongsTo
     {
-        return $this->belongsTo(CurrencyPair::class);
+        /** @var BelongsTo<\App\Models\CurrencyPair, \App\Models\Candle> $relation */
+        $relation = $this->belongsTo(CurrencyPair::class);
+        return $relation;
     }
 
     /**
      * Связь с биржей
      */
+    /**
+     * Связь с биржей
+     *
+     * @return BelongsTo<\App\Models\Exchange, \App\Models\Candle>
+     */
     public function exchange(): BelongsTo
     {
-        return $this->belongsTo(Exchange::class);
+        /** @var BelongsTo<\App\Models\Exchange, \App\Models\Candle> $relation */
+        $relation = $this->belongsTo(Exchange::class);
+        return $relation;
     }
 
     /**
      * Связь с периодом времени
      */
+    /**
+     * Связь с периодом времени
+     *
+     * @return BelongsTo<\App\Models\TimePeriod, \App\Models\Candle>
+     */
     public function timePeriod(): BelongsTo
     {
-        return $this->belongsTo(TimePeriod::class);
+        /** @var BelongsTo<\App\Models\TimePeriod, \App\Models\Candle> $relation */
+        $relation = $this->belongsTo(TimePeriod::class);
+        return $relation;
     }
 
     /**
      * Scope для фильтрации по торговой паре
+     *
+     * @param \Illuminate\Database\Eloquent\Builder<Candle> $query
+     * @param int|string $pairId
+     * @return \Illuminate\Database\Eloquent\Builder<Candle>
      */
-    public function scopeForPair($query, $pairId)
+    public function scopeForPair(\Illuminate\Database\Eloquent\Builder $query, $pairId): \Illuminate\Database\Eloquent\Builder
     {
+        /** @var \Illuminate\Database\Eloquent\Builder<Candle> $query */
         return $query->where('currency_pair_id', $pairId);
     }
 
     /**
      * Scope для фильтрации по бирже
      */
-    public function scopeForExchange($query, $exchangeId)
+    /**
+     * Scope для фильтрации по бирже
+     *
+     * @param \Illuminate\Database\Eloquent\Builder<Candle> $query
+     * @param int|string $exchangeId
+     * @return \Illuminate\Database\Eloquent\Builder<Candle>
+     */
+    public function scopeForExchange(\Illuminate\Database\Eloquent\Builder $query, int|string $exchangeId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('exchange_id', $exchangeId);
     }
@@ -79,16 +112,31 @@ class Candle extends Model
     /**
      * Scope для фильтрации по тайм-фрейму
      */
-    public function scopeForTimeframe($query, $timePeriodId)
+    /**
+     * Scope для фильтрации по тайм-фрейму
+     *
+     * @param \Illuminate\Database\Eloquent\Builder<Candle> $query
+     * @param int|string $timePeriodId
+     * @return \Illuminate\Database\Eloquent\Builder<Candle>
+     */
+    public function scopeForTimeframe(\Illuminate\Database\Eloquent\Builder $query, int|string $timePeriodId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('time_period_id', $timePeriodId);
     }
 
     /**
      * Scope для фильтрации по диапазону времени
+     *
+     * @param \Illuminate\Database\Eloquent\Builder<Candle> $query
+     * @param \DateTimeInterface|string $from
+     * @param \DateTimeInterface|string $to
+     * @return \Illuminate\Database\Eloquent\Builder<Candle>
      */
-    public function scopeInTimeRange($query, $from, $to)
-    {
+    public function scopeInTimeRange(
+        \Illuminate\Database\Eloquent\Builder $query,
+        \DateTimeInterface|string $from,
+        \DateTimeInterface|string $to
+    ): \Illuminate\Database\Eloquent\Builder {
         return $query->whereBetween('open_time', [$from, $to]);
     }
 }

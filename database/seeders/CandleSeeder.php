@@ -29,7 +29,7 @@ class CandleSeeder extends Seeder
             foreach ($exchanges->take(2) as $exchange) { // Берем только 2 биржи
                 foreach ($timePeriods->take(3) as $timePeriod) { // Берем только 3 тайм-фрейма
                     
-                    $this->command->info("Создание свечей для {$pair->symbol} на {$exchange->name} ({$timePeriod->interval})");
+                    $this->command->info("Создание свечей для {$pair->name} на {$exchange->name} ({$timePeriod->name})");
                     
                     // Создаем последовательность свечей за последние 30 дней
                     $startTime = now()->subDays(30);
@@ -40,7 +40,9 @@ class CandleSeeder extends Seeder
                     $candleCount = min(100, intval($totalMinutes / $intervalMinutes)); // Максимум 100 свечей
                     
                     // Генерируем базовую цену для этой пары
-                    $basePrice = match($pair->symbol) {
+                    // Use 'symbol' if it exists, otherwise use 'name' or another appropriate property
+                    $symbol = property_exists($pair, 'symbol') ? $pair->symbol : (property_exists($pair, 'name') ? $pair->name : null);
+                    $basePrice = match($symbol) {
                         'BTC/USDT' => 45000,
                         'ETH/USDT' => 3000,
                         'BNB/USDT' => 300,

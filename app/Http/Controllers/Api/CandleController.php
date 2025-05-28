@@ -231,14 +231,14 @@ class CandleController extends Controller
                 'exchange' => $exchange->name,
                 'timeframe' => $timePeriod->name,
                 'statistics' => [
-                    'total_candles' => (int) $stats->total_candles,
-                    'earliest_time' => $stats->earliest_time,
-                    'latest_time' => $stats->latest_time,
+                    'total_candles' => (int) ($stats->total_candles ?? 0),
+                    'earliest_time' => $stats->earliest_time ?? null,
+                    'latest_time' => $stats->latest_time ?? null,
                     'price_range' => [
-                        'min' => (float) $stats->min_price,
-                        'max' => (float) $stats->max_price,
+                        'min' => (float) ($stats->min_price ?? 0),
+                        'max' => (float) ($stats->max_price ?? 0),
                     ],
-                    'total_volume' => (float) $stats->total_volume,
+                    'total_volume' => (float) ($stats->total_volume ?? 0),
                 ]
             ]);
 

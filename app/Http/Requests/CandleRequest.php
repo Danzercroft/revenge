@@ -33,6 +33,8 @@ class CandleRequest extends FormRequest
 
     /**
      * Get custom error messages for validation rules.
+     *
+     * @return array<string, string>
      */
     public function messages(): array
     {
