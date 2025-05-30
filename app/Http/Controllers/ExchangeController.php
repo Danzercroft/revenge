@@ -8,6 +8,7 @@ use Inertia\Inertia;
 
 class ExchangeController extends Controller
 {
+    private const API_FIELD_RULE = 'nullable|string|max:255';
     /**
      * Display a listing of the resource.
      */
@@ -36,14 +37,13 @@ class ExchangeController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:10|unique:exchanges',
-            'environment' => 'required|string|in:sandbox,production',
-            'api_key' => 'nullable|string|max:255',
-            'api_secret' => 'nullable|string|max:255',
-            'api_passphrase' => 'nullable|string|max:255',
+            'api_key' => self::API_FIELD_RULE,
+            'api_secret' => self::API_FIELD_RULE,
+            'api_passphrase' => self::API_FIELD_RULE,
             'is_active' => 'boolean'
         ]);
 
-        $exchange = Exchange::create($validated);
+        Exchange::create($validated);
 
         return redirect()->route('exchanges.index')
             ->with('success', 'Биржа успешно создана');
@@ -78,12 +78,11 @@ class ExchangeController extends Controller
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:10|unique:exchanges,code,' . $exchange->id,
             'environment' => 'required|string|in:sandbox,production',
-            'api_key' => 'nullable|string|max:255',
-            'api_secret' => 'nullable|string|max:255',
-            'api_passphrase' => 'nullable|string|max:255',
+            'api_key' => self::API_FIELD_RULE,
+            'api_secret' => self::API_FIELD_RULE,
+            'api_passphrase' => self::API_FIELD_RULE,
             'is_active' => 'boolean'
         ]);
-
         // Удаляем пустые API поля из массива обновления
         $updateData = array_filter($validated, function($value, $key) {
             if (in_array($key, ['api_key', 'api_secret', 'api_passphrase'])) {

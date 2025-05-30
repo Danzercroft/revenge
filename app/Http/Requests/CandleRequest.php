@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CandleRequest extends FormRequest
 {
+    private const NULLABLE_STRING = 'nullable|string';
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,9 +24,9 @@ class CandleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'currency_pair' => 'nullable|string',
-            'exchange' => 'nullable|string',
-            'timeframe' => 'nullable|string',
+            'currency_pair' => self::NULLABLE_STRING,
+            'exchange' => self::NULLABLE_STRING,
+            'timeframe' => self::NULLABLE_STRING,
             'from' => 'nullable|date',
             'to' => 'nullable|date|after_or_equal:from',
             'limit' => 'nullable|integer|min:1|max:1000',

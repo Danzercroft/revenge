@@ -66,7 +66,7 @@ export default function Show({ currencyPair }: Props) {
                                         <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                                             Отображаемое название
                                         </dt>
-                                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 font-mono text-lg">
+                                        <dd className="mt-1 text-gray-900 dark:text-gray-100 font-mono text-lg">
                                             {currencyPair.display_name}
                                         </dd>
                                     </div>

@@ -25,15 +25,17 @@ class Candle extends Model
         'trades_count',
     ];
 
+    public const DECIMAL_CAST = 'decimal:8';
+
     protected $casts = [
         'open_time' => 'datetime',
         'close_time' => 'datetime',
-        'open_price' => 'decimal:8',
-        'high_price' => 'decimal:8',
-        'low_price' => 'decimal:8',
-        'close_price' => 'decimal:8',
-        'volume' => 'decimal:8',
-        'quote_volume' => 'decimal:8',
+        'open_price' => self::DECIMAL_CAST,
+        'high_price' => self::DECIMAL_CAST,
+        'low_price' => self::DECIMAL_CAST,
+        'close_price' => self::DECIMAL_CAST,
+        'volume' => self::DECIMAL_CAST,
+        'quote_volume' => self::DECIMAL_CAST,
     ];
 
     /**

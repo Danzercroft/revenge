@@ -15,53 +15,16 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CandleController extends Controller
 {
+    private const INTERNAL_SERVER_ERROR_MESSAGE = 'Внутренняя ошибка сервера';
     /**
      * Получить торговые свечи
      */
     public function index(CandleRequest $request): AnonymousResourceCollection|JsonResponse
     {
         try {
-            // Найдем валютную пару по ID или создадим фильтр по символам
-            $currencyPair = null;
-            if ($request->currency_pair) {
-                if (is_numeric($request->currency_pair)) {
-                    $currencyPair = CurrencyPair::find($request->currency_pair);
-                } else {
-                    // Попробуем найти по символу типа "BTC/USDT"
-                    $symbols = explode('/', $request->currency_pair);
-                    if (count($symbols) === 2) {
-                        $baseSymbol = Symbol::where('symbol', $symbols[0])->first();
-                        $quoteSymbol = Symbol::where('symbol', $symbols[1])->first();
-                        if ($baseSymbol && $quoteSymbol) {
-                            $currencyPair = CurrencyPair::where('base_symbol_id', $baseSymbol->id)
-                                ->where('quote_symbol_id', $quoteSymbol->id)
-                                ->first();
-                        }
-                    }
-                }
-            }
-
-            $exchange = null;
-            if ($request->exchange) {
-                if (is_numeric($request->exchange)) {
-                    $exchange = Exchange::find($request->exchange);
-                } else {
-                    $exchange = Exchange::where('code', strtoupper($request->exchange))
-                        ->orWhere('name', $request->exchange)
-                        ->first();
-                }
-            }
-
-            $timePeriod = null;
-            if ($request->timeframe) {
-                if (is_numeric($request->timeframe)) {
-                    $timePeriod = TimePeriod::find($request->timeframe);
-                } else {
-                    $timePeriod = TimePeriod::where('name', $request->timeframe)
-                        ->orWhere('minutes', (int)$request->timeframe)
-                        ->first();
-                }
-            }
+            $currencyPair = $this->findCurrencyPair($request->currency_pair);
+            $exchange = $this->findExchange($request->exchange);
+            $timePeriod = $this->findTimePeriod($request->timeframe);
 
             if (!$currencyPair || !$exchange || !$timePeriod) {
                 return response()->json([
@@ -70,14 +33,12 @@ class CandleController extends Controller
                 ], 404);
             }
 
-            // Строим запрос
             $query = Candle::with(['currencyPair', 'exchange', 'timePeriod'])
                 ->forPair($currencyPair->id)
                 ->forExchange($exchange->id)
                 ->forTimeframe($timePeriod->id)
                 ->orderBy('open_time', 'desc');
 
-            // Применяем фильтры по времени
             if ($request->from && $request->to) {
                 $query->inTimeRange($request->from, $request->to);
             } elseif ($request->from) {
@@ -86,7 +47,6 @@ class CandleController extends Controller
                 $query->where('open_time', '<=', $request->to);
             }
 
-            // Применяем лимит
             $limit = $request->limit ?? 100;
             $candles = $query->limit($limit)->get();
 
@@ -94,10 +54,66 @@ class CandleController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Ошибка при получении данных',
-                'message' => config('app.debug') ? $e->getMessage() : 'Внутренняя ошибка сервера'
+                'message' => config('app.debug') ? $e->getMessage() : self::INTERNAL_SERVER_ERROR_MESSAGE
             ], 500);
         }
+    }
+
+    /**
+     * Поиск валютной пары по ID или символу
+     */
+    private function findCurrencyPair(string|int|null $currencyPairInput): ?CurrencyPair
+    {
+        $result = null;
+        if ($currencyPairInput) {
+            if (is_numeric($currencyPairInput)) {
+                $result = CurrencyPair::find($currencyPairInput);
+            } else {
+                $symbols = explode('/', $currencyPairInput);
+                if (count($symbols) === 2) {
+                    $baseSymbol = Symbol::where('symbol', $symbols[0])->first();
+                    $quoteSymbol = Symbol::where('symbol', $symbols[1])->first();
+                    if ($baseSymbol && $quoteSymbol) {
+                        $result = CurrencyPair::where('base_symbol_id', $baseSymbol->id)
+                            ->where('quote_symbol_id', $quoteSymbol->id)
+                            ->first();
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Поиск биржи по ID, коду или имени
+     */
+    private function findExchange(string|int|null $exchangeInput): ?Exchange
+    {
+        if (!$exchangeInput) {
+            return null;
+        }
+        if (is_numeric($exchangeInput)) {
+            return Exchange::find($exchangeInput);
+        }
+        return Exchange::where('code', strtoupper($exchangeInput))
+            ->orWhere('name', $exchangeInput)
+            ->first();
+    }
+
+    /**
+     * Поиск таймфрейма по ID, имени или минутам
+     */
+    private function findTimePeriod(string|int|null $timeframeInput): ?TimePeriod
+    {
+        if (!$timeframeInput) {
+            return null;
+        }
+        if (is_numeric($timeframeInput)) {
+            return TimePeriod::find($timeframeInput);
+        }
+        return TimePeriod::where('name', $timeframeInput)
+            ->orWhere('minutes', (int)$timeframeInput)
+            ->first();
     }
 
     /**
@@ -138,7 +154,7 @@ class CandleController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Ошибка при получении метаданных',
-                'message' => config('app.debug') ? $e->getMessage() : 'Внутренняя ошибка сервера'
+                'message' => config('app.debug') ? $e->getMessage() : self::INTERNAL_SERVER_ERROR_MESSAGE
             ], 500);
         }
     }
@@ -149,70 +165,19 @@ class CandleController extends Controller
     public function stats(CandleRequest $request): JsonResponse
     {
         try {
-            // Найдем валютную пару по ID или создадим фильтр по символам
-            $currencyPair = null;
-            if ($request->currency_pair) {
-                if (is_numeric($request->currency_pair)) {
-                    $currencyPair = CurrencyPair::find($request->currency_pair);
-                } else {
-                    // Попробуем найти по символу типа "BTC/USDT"
-                    $symbols = explode('/', $request->currency_pair);
-                    if (count($symbols) === 2) {
-                        $baseSymbol = Symbol::where('symbol', $symbols[0])->first();
-                        $quoteSymbol = Symbol::where('symbol', $symbols[1])->first();
-                        if ($baseSymbol && $quoteSymbol) {
-                            $currencyPair = CurrencyPair::where('base_symbol_id', $baseSymbol->id)
-                                ->where('quote_symbol_id', $quoteSymbol->id)
-                                ->first();
-                        }
-                    }
-                }
-            }
+            $currencyPair = $this->findCurrencyPairForStats($request->currency_pair);
+            $exchange = $this->findExchangeForStats($request->exchange);
+            $timePeriod = $this->findTimePeriodForStats($request->timeframe);
 
-            $exchange = null;
-            if ($request->exchange) {
-                if (is_numeric($request->exchange)) {
-                    $exchange = Exchange::find($request->exchange);
-                } else {
-                    $exchange = Exchange::where('code', strtoupper($request->exchange))
-                        ->orWhere('name', $request->exchange)
-                        ->first();
-                }
-            }
-
-            $timePeriod = null;
-            if ($request->timeframe) {
-                if (is_numeric($request->timeframe)) {
-                    $timePeriod = TimePeriod::find($request->timeframe);
-                } else {
-                    $timePeriod = TimePeriod::where('name', $request->timeframe)
-                        ->orWhere('minutes', (int)$request->timeframe)
-                        ->first();
-                }
-            }
-
-            if ($request->currency_pair && !$currencyPair) {
-                return response()->json(['error' => 'Торговая пара не найдена'], 404);
-            }
-            if ($request->exchange && !$exchange) {
-                return response()->json(['error' => 'Биржа не найдена'], 404);
-            }
-            if ($request->timeframe && !$timePeriod) {
-                return response()->json(['error' => 'Тайм-фрейм не найден'], 404);
-            }
-
-            // Для статистики требуются все параметры
-            if (!$currencyPair || !$exchange || !$timePeriod) {
-                return response()->json([
-                    'error' => 'Для получения статистики требуются параметры: currency_pair, exchange, timeframe'
-                ], 400);
+            $error = $this->validateStatsParams($request, $currencyPair, $exchange, $timePeriod);
+            if ($error) {
+                return $error;
             }
 
             $query = Candle::forPair($currencyPair->id)
                 ->forExchange($exchange->id)
                 ->forTimeframe($timePeriod->id);
 
-            // Применяем фильтры по времени
             if ($request->from && $request->to) {
                 $query->inTimeRange($request->from, $request->to);
             }
@@ -245,8 +210,61 @@ class CandleController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Ошибка при получении статистики',
-                'message' => config('app.debug') ? $e->getMessage() : 'Внутренняя ошибка сервера'
+                'message' => config('app.debug') ? $e->getMessage() : self::INTERNAL_SERVER_ERROR_MESSAGE
             ], 500);
         }
+    }
+
+    /**
+     * Вынесенная логика поиска валютной пары для stats
+     */
+    private function findCurrencyPairForStats(string|int|null $currencyPairInput): ?CurrencyPair
+    {
+        // Используем уже существующую логику поиска валютной пары
+        return $this->findCurrencyPair($currencyPairInput);
+    }
+
+    /**
+     * Вынесенная логика поиска биржи для stats
+     */
+    private function findExchangeForStats(string|int|null $exchangeInput): ?Exchange
+    {
+        // Используем уже существующую логику поиска биржи
+        return $this->findExchange($exchangeInput);
+    }
+
+    /**
+     * Вынесенная логика поиска таймфрейма для stats
+     */
+    private function findTimePeriodForStats(string|int|null $timeframeInput): ?TimePeriod
+    {
+        // Используем уже существующую логику поиска таймфрейма
+        return $this->findTimePeriod($timeframeInput);
+    }
+
+    /**
+     * Проверка параметров для stats
+     */
+    private function validateStatsParams(
+        CandleRequest $request,
+        ?\App\Models\CurrencyPair $currencyPair,
+        ?\App\Models\Exchange $exchange,
+        ?\App\Models\TimePeriod $timePeriod
+    ): ?\Illuminate\Http\JsonResponse {
+        $response = null;
+
+        if ($request->currency_pair && !$currencyPair) {
+            $response = response()->json(['error' => 'Торговая пара не найдена'], 404);
+        } elseif ($request->exchange && !$exchange) {
+            $response = response()->json(['error' => 'Биржа не найдена'], 404);
+        } elseif ($request->timeframe && !$timePeriod) {
+            $response = response()->json(['error' => 'Тайм-фрейм не найден'], 404);
+        } elseif (!$currencyPair || !$exchange || !$timePeriod) {
+            $response = response()->json([
+                'error' => 'Для получения статистики требуются параметры: currency_pair, exchange, timeframe'
+            ], 400);
+        }
+
+        return $response;
     }
 }

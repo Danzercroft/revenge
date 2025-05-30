@@ -86,7 +86,7 @@ export default function Show({ configuration }: Props) {
                                         <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                                             ID конфигурации
                                         </dt>
-                                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 font-mono text-lg">
+                                        <dd className="mt-1 text-gray-900 dark:text-gray-100 font-mono text-lg">
                                             #{configuration.id}
                                         </dd>
                                     </div>
