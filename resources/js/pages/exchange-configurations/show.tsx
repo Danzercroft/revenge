@@ -41,7 +41,7 @@ interface ExchangeConfiguration {
 }
 
 interface Props {
-    configuration: ExchangeConfiguration
+    readonly configuration: ExchangeConfiguration
 }
 
 export default function Show({ configuration }: Props) {

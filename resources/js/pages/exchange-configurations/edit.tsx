@@ -48,7 +48,7 @@ interface Props {
     timePeriods: TimePeriod[]
 }
 
-export default function Edit({ configuration, exchanges, currencyPairs, timePeriods }: Props) {
+export default function Edit({ configuration, exchanges, currencyPairs, timePeriods }: Readonly<Props>) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Конфигурации бирж',

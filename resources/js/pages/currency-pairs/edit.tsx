@@ -24,8 +24,8 @@ interface CurrencyPair {
 }
 
 interface Props {
-    currencyPair: CurrencyPair
-    symbols: Symbol[]
+    readonly currencyPair: CurrencyPair
+    readonly symbols: Symbol[]
 }
 
 export default function Edit({ currencyPair, symbols }: Props) {

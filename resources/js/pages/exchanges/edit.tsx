@@ -25,7 +25,7 @@ interface Props {
     exchange: Exchange
 }
 
-export default function Edit({ exchange }: Props) {
+export default function Edit({ exchange }: Readonly<Props>) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Биржи',

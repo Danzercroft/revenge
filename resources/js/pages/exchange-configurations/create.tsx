@@ -27,9 +27,9 @@ interface CurrencyPair {
 }
 
 interface CreateProps {
-    exchanges: Exchange[];
-    timePeriods: TimePeriod[];
-    currencyPairs: CurrencyPair[];
+    readonly exchanges: Exchange[];
+    readonly timePeriods: TimePeriod[];
+    readonly currencyPairs: CurrencyPair[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -63,6 +63,12 @@ export default function Create({ exchanges, timePeriods, currencyPairs }: Create
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route('exchange-configurations.store'));
+    };
+
+    const getCurrencyPairTypeLabel = (type?: 'spot' | 'futures') => {
+        if (type === 'spot') return 'Спот';
+        if (type === 'futures') return 'Фьючерс';
+        return 'Не выбран';
     };
 
     React.useEffect(() => {
@@ -117,10 +123,11 @@ export default function Create({ exchanges, timePeriods, currencyPairs }: Create
                                             
                                             {/* Выбор биржи */}
                                             <div className="mb-4">
-                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                <label htmlFor="exchange_id" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                     Биржа
                                                 </label>
                                                 <select
+                                                    id="exchange_id"
                                                     value={data.exchange_id}
                                                     onChange={(e) => setData('exchange_id', e.target.value)}
                                                     className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
@@ -140,10 +147,11 @@ export default function Create({ exchanges, timePeriods, currencyPairs }: Create
 
                                             {/* Выбор валютной пары */}
                                             <div className="mb-4">
-                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                <label htmlFor="currency_pair_id" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                     Валютная пара
                                                 </label>
                                                 <select
+                                                    id="currency_pair_id"
                                                     value={data.currency_pair_id}
                                                     onChange={(e) => setData('currency_pair_id', e.target.value)}
                                                     className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
@@ -163,10 +171,11 @@ export default function Create({ exchanges, timePeriods, currencyPairs }: Create
 
                                             {/* Выбор временного интервала */}
                                             <div className="mb-4">
-                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                <label htmlFor="time_period_id" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                     Временной интервал
                                                 </label>
                                                 <select
+                                                    id="time_period_id"
                                                     value={data.time_period_id}
                                                     onChange={(e) => setData('time_period_id', e.target.value)}
                                                     className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
@@ -233,26 +242,25 @@ export default function Create({ exchanges, timePeriods, currencyPairs }: Create
                                                     <div>
                                                         <span className="block text-sm font-medium text-gray-500 dark:text-gray-400">Биржа</span>
                                                         <span className="text-sm text-gray-900 dark:text-gray-100">
-                                                            {selectedExchange?.name || 'Не выбрана'}
+                                                            {selectedExchange?.name ?? 'Не выбрана'}
                                                         </span>
                                                     </div>
                                                     <div>
                                                         <span className="block text-sm font-medium text-gray-500 dark:text-gray-400">Валютная пара</span>
                                                         <span className="text-sm text-gray-900 dark:text-gray-100">
-                                                            {selectedCurrencyPair?.display_name || 'Не выбрана'}
+                                                            {selectedCurrencyPair?.display_name ?? 'Не выбрана'}
                                                         </span>
                                                     </div>
                                                     <div>
                                                         <span className="block text-sm font-medium text-gray-500 dark:text-gray-400">Тип</span>
                                                         <span className="text-sm text-gray-900 dark:text-gray-100">
-                                                            {selectedCurrencyPair?.type === 'spot' ? 'Спот' : 
-                                                             selectedCurrencyPair?.type === 'futures' ? 'Фьючерс' : 'Не выбран'}
+                                                            {getCurrencyPairTypeLabel(selectedCurrencyPair?.type)}
                                                         </span>
                                                     </div>
                                                     <div>
                                                         <span className="block text-sm font-medium text-gray-500 dark:text-gray-400">Временной интервал</span>
                                                         <span className="text-sm text-gray-900 dark:text-gray-100">
-                                                            {selectedTimePeriod?.name || 'Не выбран'}
+                                                            {selectedTimePeriod?.name ?? 'Не выбран'}
                                                         </span>
                                                     </div>
                                                     <div>

@@ -55,22 +55,16 @@ class Candle extends Model
 
     /**
      * Связь с биржей
-     */
-    /**
-     * Связь с биржей
      *
      * @return BelongsTo<\App\Models\Exchange, \App\Models\Candle>
      */
     public function exchange(): BelongsTo
     {
         /** @var BelongsTo<\App\Models\Exchange, \App\Models\Candle> $relation */
-        $relation = $this->belongsTo(Exchange::class);
+        $relation = $this->belongsTo(Exchange::class, 'exchange_id', 'id');
         return $relation;
     }
 
-    /**
-     * Связь с периодом времени
-     */
     /**
      * Связь с периодом времени
      *
@@ -79,7 +73,7 @@ class Candle extends Model
     public function timePeriod(): BelongsTo
     {
         /** @var BelongsTo<\App\Models\TimePeriod, \App\Models\Candle> $relation */
-        $relation = $this->belongsTo(TimePeriod::class);
+        $relation = $this->belongsTo(TimePeriod::class, 'time_period_id', 'id');
         return $relation;
     }
 

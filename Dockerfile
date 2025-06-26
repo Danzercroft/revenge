@@ -23,35 +23,34 @@ RUN npm run build
 # Основная PHP сборка
 FROM php:8.3-fpm-alpine AS backend
 
-# Устанавливаем системные зависимости
+# Устанавливаем системные зависимости, расширения PHP и Redis
 RUN apk add --no-cache \
-    git \
+    autoconf \
+    bash \
     curl \
+    freetype-dev \
+    g++ \
+    gcc \
+    git \
+    libjpeg-turbo-dev \
     libpng-dev \
     libxml2-dev \
     libzip-dev \
-    zip \
-    unzip \
-    postgresql-dev \
-    freetype-dev \
-    libjpeg-turbo-dev \
+    make \
     nodejs \
     npm \
+    postgresql-dev \
     supervisor \
-    bash
-
-# Устанавливаем расширения PHP
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    unzip \
+    zip && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install \
     pdo \
     pdo_pgsql \
     bcmath \
     gd \
     xml \
-    zip
-
-# Устанавливаем расширение Redis
-RUN apk add --no-cache autoconf gcc g++ make && \
+    zip && \
     pecl install redis && \
     docker-php-ext-enable redis && \
     apk del autoconf gcc g++ make

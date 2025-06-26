@@ -14,7 +14,7 @@ interface Symbol {
 }
 
 interface Props {
-    symbols: Symbol[]
+    readonly symbols: readonly Symbol[]
 }
 
 const breadcrumbs: BreadcrumbItem[] = [

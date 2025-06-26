@@ -24,7 +24,7 @@ interface Props {
     currencyPair: CurrencyPair
 }
 
-export default function Show({ currencyPair }: Props) {
+export default function Show({ currencyPair }: Readonly<Props>) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Валютные пары',

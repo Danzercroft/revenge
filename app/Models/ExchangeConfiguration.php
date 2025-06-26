@@ -26,7 +26,7 @@ class ExchangeConfiguration extends Model
     public function exchange(): BelongsTo
     {
         /** @var BelongsTo<\App\Models\Exchange, \App\Models\ExchangeConfiguration> $relation */
-        $relation = $this->belongsTo(Exchange::class);
+        $relation = $this->belongsTo(Exchange::class, 'exchange_id', 'id');
         return $relation;
     }
 

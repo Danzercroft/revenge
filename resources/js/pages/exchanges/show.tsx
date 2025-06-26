@@ -19,7 +19,7 @@ interface Props {
     exchange: Exchange
 }
 
-function ExchangeShow({ exchange }: Props) {
+function ExchangeShow({ exchange }: Readonly<Props>) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Главная',
@@ -140,7 +140,7 @@ function ExchangeShow({ exchange }: Props) {
                                     API ключ
                                 </dt>
                                 <dd className="mt-1 text-sm text-gray-900 font-mono">
-                                    {exchange.api_key_masked || (
+                                    {exchange.api_key_masked ?? (
                                         <span className="text-gray-400 italic">Не настроен</span>
                                     )}
                                 </dd>
@@ -150,7 +150,7 @@ function ExchangeShow({ exchange }: Props) {
                                     API секрет
                                 </dt>
                                 <dd className="mt-1 text-sm text-gray-900 font-mono">
-                                    {exchange.api_secret_masked || (
+                                    {exchange.api_secret_masked ?? (
                                         <span className="text-gray-400 italic">Не настроен</span>
                                     )}
                                 </dd>
@@ -160,7 +160,7 @@ function ExchangeShow({ exchange }: Props) {
                                     API фраза
                                 </dt>
                                 <dd className="mt-1 text-sm text-gray-900 font-mono">
-                                    {exchange.api_passphrase_masked || (
+                                    {exchange.api_passphrase_masked ?? (
                                         <span className="text-gray-400 italic">Не настроена</span>
                                     )}
                                 </dd>

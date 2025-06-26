@@ -78,11 +78,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index({ configurations, exchanges, timePeriods, filters }: IndexProps) {
+export default function Index({ configurations, exchanges, timePeriods, filters }: Readonly<IndexProps>) {
     const [filterValues, setFilterValues] = useState({
-        exchange_id: filters.exchange_id || 'all',
-        time_period_id: filters.time_period_id || 'all',
-        is_active: filters.is_active || 'all',
+        exchange_id: filters.exchange_id ?? 'all',
+        time_period_id: filters.time_period_id ?? 'all',
+        is_active: filters.is_active ?? 'all',
     });
 
     const handleFilter = () => {
@@ -150,10 +150,11 @@ export default function Index({ configurations, exchanges, timePeriods, filters 
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label htmlFor="filter-exchange" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Биржа
                                         </label>
                                         <select
+                                            id="filter-exchange"
                                             value={filterValues.exchange_id}
                                             onChange={(e) => setFilterValues(prev => ({ ...prev, exchange_id: e.target.value }))}
                                             className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
@@ -168,10 +169,11 @@ export default function Index({ configurations, exchanges, timePeriods, filters 
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label htmlFor="filter-time-period" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Временной интервал
                                         </label>
                                         <select
+                                            id="filter-time-period"
                                             value={filterValues.time_period_id}
                                             onChange={(e) => setFilterValues(prev => ({ ...prev, time_period_id: e.target.value }))}
                                             className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
@@ -184,12 +186,12 @@ export default function Index({ configurations, exchanges, timePeriods, filters 
                                             ))}
                                         </select>
                                     </div>
-
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label htmlFor="filter-status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Статус
                                         </label>
                                         <select
+                                            id="filter-status"
                                             value={filterValues.is_active}
                                             onChange={(e) => setFilterValues(prev => ({ ...prev, is_active: e.target.value }))}
                                             className="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
@@ -311,9 +313,9 @@ export default function Index({ configurations, exchanges, timePeriods, filters 
                                             Показано {configurations.from}-{configurations.to} из {configurations.total} результатов
                                         </div>
                                         <nav className="flex gap-2">
-                                            {configurations.links.map((link: PaginationLink, index: number) => (
+                                            {configurations.links.map((link: PaginationLink) => (
                                                 <button
-                                                    key={index}
+                                                    key={`${link.label}-${link.url ?? ''}`}
                                                     onClick={() => link.url && router.visit(link.url)}
                                                     disabled={!link.url}
                                                     className={`px-3 py-2 text-sm font-medium rounded-md ${

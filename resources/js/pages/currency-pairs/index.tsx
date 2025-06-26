@@ -21,7 +21,7 @@ interface CurrencyPair {
 }
 
 interface Props {
-    currencyPairs: CurrencyPair[]
+    readonly currencyPairs: CurrencyPair[]
 }
 
 const breadcrumbs: BreadcrumbItem[] = [

@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CurrencyPair extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'base_symbol_id',
         'quote_symbol_id',
