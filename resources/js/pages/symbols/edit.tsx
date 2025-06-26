@@ -17,7 +17,7 @@ interface Symbol {
 }
 
 interface Props {
-    symbol: Symbol
+    readonly symbol: Symbol
 }
 
 export default function Edit({ symbol }: Props) {
@@ -35,7 +35,7 @@ export default function Edit({ symbol }: Props) {
     const { data, setData, put, processing, errors } = useForm({
         name: symbol.name,
         symbol: symbol.symbol,
-        description: symbol.description || '',
+        description: symbol.description ?? '',
         is_active: symbol.is_active,
     })
 

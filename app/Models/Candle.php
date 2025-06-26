@@ -48,9 +48,8 @@ class Candle extends Model
      */
     public function currencyPair(): BelongsTo
     {
-        /** @var BelongsTo<\App\Models\CurrencyPair, \App\Models\Candle> $relation */
-        $relation = $this->belongsTo(CurrencyPair::class);
-        return $relation;
+        /** @var BelongsTo<\App\Models\CurrencyPair, \App\Models\Candle> */
+        return $this->belongsTo(CurrencyPair::class);
     }
 
     /**
@@ -60,9 +59,8 @@ class Candle extends Model
      */
     public function exchange(): BelongsTo
     {
-        /** @var BelongsTo<\App\Models\Exchange, \App\Models\Candle> $relation */
-        $relation = $this->belongsTo(Exchange::class, 'exchange_id', 'id');
-        return $relation;
+        /** @var BelongsTo<\App\Models\Exchange, \App\Models\Candle> */
+        return $this->belongsTo(Exchange::class, 'exchange_id', 'id');
     }
 
     /**
@@ -72,9 +70,8 @@ class Candle extends Model
      */
     public function timePeriod(): BelongsTo
     {
-        /** @var BelongsTo<\App\Models\TimePeriod, \App\Models\Candle> $relation */
-        $relation = $this->belongsTo(TimePeriod::class, 'time_period_id', 'id');
-        return $relation;
+        /** @var BelongsTo<\App\Models\TimePeriod, \App\Models\Candle> */
+        return $this->belongsTo(TimePeriod::class, 'time_period_id', 'id');
     }
 
     /**

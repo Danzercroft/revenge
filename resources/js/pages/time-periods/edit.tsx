@@ -20,7 +20,7 @@ interface Props {
     timePeriod: TimePeriod
 }
 
-export default function Edit({ timePeriod }: Props) {
+export default function Edit({ timePeriod }: Readonly<Props>) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Периоды времени',

@@ -37,7 +37,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ]
 
-export default function Index({ exchanges }: Props) {
+export default function Index({ exchanges }: Readonly<Props>) {
     const deleteExchange = (id: number) => {
         if (confirm('Вы уверены, что хотите удалить эту биржу?')) {
             router.delete(route('exchanges.destroy', id))
@@ -105,7 +105,7 @@ export default function Index({ exchanges }: Props) {
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 font-mono">
-                                                    {exchange.api_key_masked || 'Не настроен'}
+                                                    {exchange.api_key_masked ?? 'Не настроен'}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <span className={exchange.is_active 

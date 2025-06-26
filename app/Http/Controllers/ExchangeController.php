@@ -37,6 +37,7 @@ class ExchangeController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:10|unique:exchanges',
+            'environment' => 'required|string|in:sandbox,production',
             'api_key' => self::API_FIELD_RULE,
             'api_secret' => self::API_FIELD_RULE,
             'api_passphrase' => self::API_FIELD_RULE,

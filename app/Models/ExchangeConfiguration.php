@@ -25,9 +25,8 @@ class ExchangeConfiguration extends Model
      */
     public function exchange(): BelongsTo
     {
-        /** @var BelongsTo<\App\Models\Exchange, \App\Models\ExchangeConfiguration> $relation */
-        $relation = $this->belongsTo(Exchange::class, 'exchange_id', 'id');
-        return $relation;
+        /** @var BelongsTo<\App\Models\Exchange, \App\Models\ExchangeConfiguration> */
+        return $this->belongsTo(Exchange::class, 'exchange_id', 'id');
     }
 
     /**
@@ -35,9 +34,8 @@ class ExchangeConfiguration extends Model
      */
     public function currencyPair(): BelongsTo
     {
-        /** @var BelongsTo<\App\Models\CurrencyPair, \App\Models\ExchangeConfiguration> $relation */
-        $relation = $this->belongsTo(CurrencyPair::class, 'currency_pair_id', 'id');
-        return $relation;
+        /** @var BelongsTo<\App\Models\CurrencyPair, \App\Models\ExchangeConfiguration> */
+        return $this->belongsTo(CurrencyPair::class, 'currency_pair_id', 'id');
     }
 
     /**
@@ -45,9 +43,8 @@ class ExchangeConfiguration extends Model
      */
     public function timePeriod(): BelongsTo
     {
-        /** @var BelongsTo<\App\Models\TimePeriod, \App\Models\ExchangeConfiguration> $relation */
-        $relation = $this->belongsTo(TimePeriod::class);
-        return $relation;
+        /** @var BelongsTo<\App\Models\TimePeriod, \App\Models\ExchangeConfiguration>*/
+        return $this->belongsTo(TimePeriod::class);
     }
 
     /**

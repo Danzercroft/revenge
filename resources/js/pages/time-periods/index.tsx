@@ -24,7 +24,7 @@ interface PaginatedTimePeriods {
 }
 
 interface Props {
-    timePeriods: PaginatedTimePeriods
+    readonly timePeriods: PaginatedTimePeriods
 }
 
 const breadcrumbs: BreadcrumbItem[] = [

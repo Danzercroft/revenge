@@ -24,7 +24,7 @@ interface PaginatedSymbols {
 }
 
 interface Props {
-    symbols: PaginatedSymbols
+    readonly symbols: PaginatedSymbols
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
