@@ -7,6 +7,7 @@ use App\Http\Controllers\TimePeriodController;
 use App\Http\Controllers\ExchangeController;
 use App\Http\Controllers\CurrencyPairController;
 use App\Http\Controllers\ExchangeConfigurationController;
+use App\Http\Controllers\ChartController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -16,6 +17,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+    
+    Route::get('charts', [ChartController::class, 'index'])->name('charts');
 });
 
 Route::middleware('auth')->group(function () {

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             ExchangeSeeder::class,
             CurrencyPairSeeder::class,
             ExchangeConfigurationSeeder::class,
+            CandleSeeder::class,
         ]);
     }
 }
